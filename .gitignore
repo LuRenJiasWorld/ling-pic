@@ -3,3 +3,6 @@
 /data
 /conf/config.php
 /conf/install.lock
+/.idea/
+.DS_store
+
