@@ -12,15 +12,15 @@ class setting_mdl extends modelfactory {
     var $_regSave = false;
     
     function get_conf($key,$default=null){
-        $key = preg_replace("/([^a-zA-Z0-9_\-\.]+)/","", $key);
-        $key_arr = explode('.',$key);
-        $k = array_shift($key_arr);
+        $key = preg_replace("/([^a-zA-Z0-9_\-\.]+)/","", $key);				//过滤非法字符
+        $key_arr = explode('.',$key);													//拆分配置类别和配置项
+        $k = array_shift($key_arr);																//挤出配置类别
         
         if(isset($this->setting_pool[$k])){
-            $value = $this->setting_pool[$k];
+            $value = $this->setting_pool[$k];													//若配置项加载过，直接返回内存中加载的配置项
         }else{
-            $cache =& loader::lib('cache');
-            $value = $cache->get('setting_'.$k);
+            $cache =& loader::lib('cache');														//加载cache库
+            $value = $cache->get('setting_'.$k);												//获取缓存
             if($value === false){
                 $this->db->select('#@setting','value',"name='".$k."'");
                 $data = $this->db->getOne();

@@ -19,7 +19,7 @@ class cache_cla{
     /**
     * construct function
     */
-    function cache_cla(){
+    function cache_cla(){							//todo 换用新构造函数
         $this->config =& Loader::config();
         $engine = $this->config['cache_engine'];
         include_once(LIBDIR.'/cache/'.$engine.'.php');

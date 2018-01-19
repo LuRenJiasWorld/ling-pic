@@ -44,8 +44,9 @@ class Loader{
     /**
      * 装载模型
      */
-    static function &model($modelName){
-        if(!isset(self::$_models[$modelName])){
+    static function &model($modelName){											//依靠这个中介来装载对应模型
+		//利用了数组去实现装载模型后的多态特性
+        if(!isset(self::$_models[$modelName])){									//只有当前没有装载对应模型时才会开始装载
             $modelPath = MODELDIR.$modelName.'.mdl.php';
             $modelClass = $modelName.'_mdl';
             if(file_exists($modelPath)) {
@@ -89,12 +90,12 @@ class Loader{
     /**
      * 装载配置
      */
-    static function &config($name = 'config'){
+    static function &config($name = 'config'){						//配置文件默认为config.php
         if ( !isset(self::$_configs[$name])){
             if (!file_exists(ROOTDIR."conf/{$name}.php")){
                 exit(lang('config_file_not_exists'));
             }
-            require(ROOTDIR."conf/{$name}.php");
+            require(ROOTDIR."conf/".$name.".php");					//加载配置文件，配置数组为$CONFIG
 
             if ( ! isset($CONFIG) || ! is_array($CONFIG)){
                 exit(lang('config_file_error'));

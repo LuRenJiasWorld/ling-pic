@@ -90,8 +90,8 @@ function unset_globals() {
  */
 function lang() {
     global $templatelangs,$base_path;
-    $varr = func_get_args();
-    $var = array_shift($varr);
+    $varr = func_get_args();					//获取参数
+    $var = array_shift($varr);					//挤出数组中第一个元素代表的参数
     if(isset($GLOBALS['language'][$var])) {
         return vsprintf(str_replace('{base_path}', $base_path, $GLOBALS['language'][$var]),$varr);
     } else {
@@ -153,33 +153,34 @@ function boot_init(){
 }
 
 function timezone_set($timeoffset = 8) {
-    if(function_exists('date_default_timezone_set')) {
+    if(function_exists('date_default_timezone_set')) {					//若date库存在且默认时区设置函数有效
         @date_default_timezone_set('Etc/GMT'.($timeoffset > 0 ? '-' : '+').(abs($timeoffset)));
+        //最终参数诸如Etc/GMT+8
     }
 }
 
 
-function init_defines(){
-    $Config =& loader::config();
+function init_defines(){													//初始化系统
+    $Config =& loader::config();											//加载配置并返回至$Config
     if(isset($Config['img_engine']) && in_array($Config['img_engine'],array('imagick','gd'))){
-        define('IMG_ENGINE',$Config['img_engine']);
+        define('IMG_ENGINE',$Config['img_engine']);							//调用配置文件中的图形处理库
     }else{
-        define('IMG_ENGINE','gd');
+        define('IMG_ENGINE','gd');											//若未定义，默认定义为gd库
     }
 
     if(isset($Config['storage_engine'])){
-        define('STORAGE_ENGINE',$Config['storage_engine']);
+        define('STORAGE_ENGINE',$Config['storage_engine']);					//调用配置文件中的缓存引擎
     }else{
-        define('STORAGE_ENGINE','file');
+        define('STORAGE_ENGINE','file');									//若未定义，默认为file（其余选择：apc/memcached/xcache）
     }
     
     
-    $setting =& loader::model('setting');
-    define('GRAVATAR_URL',$setting->get_conf('system.gravatar_url'));
+    $setting =& loader::model('setting');									//装载setting模型
+    define('GRAVATAR_URL',$setting->get_conf('system.gravatar_url'));		//获取缓存/数据库中gravatar的链接
     if(!defined('LANGSET'))
-        define('LANGSET',$setting->get_conf('system.language','zh_cn'));
+        define('LANGSET',$setting->get_conf('system.language','zh_cn'));	//获取缓存/数据库中语言
     if(!defined('TIMEZONE'))
-        define('TIMEZONE',$setting->get_conf('system.timezone',8.00));
+        define('TIMEZONE',$setting->get_conf('system.timezone',8.00));		//获取缓存/数据库中时区
     
     timezone_set(TIMEZONE);
 }
@@ -209,11 +210,11 @@ function init_template($user_theme){
     }
 }
 
-function meiu_bootstrap(){
-    unset_globals();
+function meiu_bootstrap(){														//入口函数
+    unset_globals();															//初始化，清除多余的全局变量
 
     global $base_url, $base_path, $base_root, $language,$templatelangs;
-    timer_start('page');
+    timer_start('page');													//计时开始
     require_once(COREDIR.'loader.php');
     require_once(INCDIR.'functions.php');
     include_once(INCDIR.'plugin.php');

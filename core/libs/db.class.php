@@ -25,8 +25,8 @@ class db_cla{
     var $arr=array();
     
     var $sql=null;
-    
-    function init($db_config){
+
+	function init($db_config){
 
         if(is_array($db_config) && $db_config['adapter'])
             $adapterName='adapter_'.$db_config['adapter'];
